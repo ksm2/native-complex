@@ -27,3 +27,9 @@ void absolute(int r1, int i1, int* real, int* imaginary) {
   *real = sqrt(r1 * r1 + i1 * i1);
   *imaginary = 0;
 }
+
+// Calculates the number's conjugate
+void conjugate(int r1, int i1, int* real, int* imaginary) {
+  *real = r1;
+  *imaginary = -i1;
+}

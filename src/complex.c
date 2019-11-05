@@ -30,6 +30,7 @@ napi_value cplx_init(napi_env env, napi_value exports) {
   EXPORT2(multiply)
   EXPORT2(divide)
   EXPORT1(absolute)
+  EXPORT1(conjugate)
 
   return exports;
 }
