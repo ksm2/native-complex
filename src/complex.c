@@ -4,17 +4,21 @@
 #include "./inc/funcs.c"
 #include "./inc/arithmetics.c"
 
+
+#define EXPORT(exp, fn) \
+  napi_value cb_ ## fn(napi_env env, napi_callback_info info) { \
+    return cplx_argv2(env, info, fn); \
+  } \
+  status = cplx_bind_func(env, exports, exp, cb_ ## fn ); \
+  if (status != napi_ok) napi_throw_error(env, NULL, "Unable to bind " #exp " function");
+
+
 napi_value cplx_init(napi_env env, napi_value exports) {
   napi_status status;
 
-  status = cplx_bind_func(env, exports, "add", cplx_add);
-  if (status != napi_ok) napi_throw_error(env, NULL, "Unable to bind add function");
-
-  status = cplx_bind_func(env, exports, "subtract", cplx_subtract);
-  if (status != napi_ok) napi_throw_error(env, NULL, "Unable to bind subtract function");
-
-  status = cplx_bind_func(env, exports, "multiply", cplx_multiply);
-  if (status != napi_ok) napi_throw_error(env, NULL, "Unable to bind multiply function");
+  EXPORT("add", add)
+  EXPORT("subtract", subtract)
+  EXPORT("multiply", multiply)
 
   return exports;
 }
