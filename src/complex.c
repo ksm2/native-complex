@@ -10,6 +10,9 @@ napi_value cplx_init(napi_env env, napi_value exports) {
   status = cplx_bind_func(env, exports, "add", cplx_add);
   if (status != napi_ok) napi_throw_error(env, NULL, "Unable to bind add function");
 
+  status = cplx_bind_func(env, exports, "subtract", cplx_subtract);
+  if (status != napi_ok) napi_throw_error(env, NULL, "Unable to bind subtract function");
+
   status = cplx_bind_func(env, exports, "multiply", cplx_multiply);
   if (status != napi_ok) napi_throw_error(env, NULL, "Unable to bind multiply function");
 

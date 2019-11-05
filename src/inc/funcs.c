@@ -26,3 +26,21 @@ napi_status cplx_destruct_argv2(napi_env env, napi_callback_info info, int* r1, 
 
   return napi_ok;
 }
+
+napi_value cplx_argv2(napi_env env, napi_callback_info info, void (*calculate)(int, int, int, int, int*, int*)) {
+  napi_status status;
+
+  int r1 = 0, i1 = 0, r2 = 0, i2 = 0;
+  status = cplx_destruct_argv2(env, info, &r1, &i1, &r2, &i2);
+  if (status != napi_ok) napi_throw_error(env, NULL, "Unable to destruct input parameters");
+
+  // Do calculation
+  int real = 0, imaginary = 0;
+  calculate(r1, i1, r2, i2, &real, &imaginary);
+
+  napi_value arr;
+  status = cplx_construct(env, real, imaginary, &arr);
+  if (status != napi_ok) napi_throw_error(env, NULL, "Unable to construct output array");
+
+  return arr;
+}
