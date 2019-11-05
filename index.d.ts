@@ -1,21 +1,28 @@
 export type Complex = [number, number];
 
 /**
- * Adds two complex numbers.
+ * Adds two complex numbers
  *
  * @param c1 - The first complex number.
  * @param c2 - The second complex number.
- * @returns The sum of both complex numbers.
+ * @returns The result.
  */
 export function add(c1: Complex, c2: Complex): Complex;
 
 /**
- * Subtracts two complex numbers.
+ * Subtracts two complex numbers
  *
  * @param c1 - The first complex number.
  * @param c2 - The second complex number.
- * @returns The difference of both complex numbers.
+ * @returns The result.
  */
 export function subtract(c1: Complex, c2: Complex): Complex;
 
+/**
+ * Multiplies two complex numbers
+ *
+ * @param c1 - The first complex number.
+ * @param c2 - The second complex number.
+ * @returns The result.
+ */
 export function multiply(c1: Complex, c2: Complex): Complex;

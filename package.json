@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "build": "node-gyp rebuild"
+    "build": "node-gyp rebuild && node build.js"
   },
   "devDependencies": {
     "@types/jest": "^24.0.21",
