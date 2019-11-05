@@ -6,20 +6,18 @@ const arithmetics = fs.readFileSync(path.resolve(__dirname, './src/inc/arithmeti
 let index = 'const complex = require(\'./build/Release/complex\');\n';
 let typings = 'export type Complex = [number, number];\n';
 
-const re = /\/\/ (?<doc>.*)\nvoid (?<name>\w+)/g;
+const re = /\/\/ (?<doc>.*)\nvoid (?<name>\w+)\((?<args>.*)\)/g;
 let match;
 while ((match = re.exec(arithmetics)) !== null) {
-  const { name, doc } = match.groups;
+  const { name, doc, args } = match.groups;
+  const numArgs = args.split(', ').length / 2 - 1;
+  const argStr = new Array(numArgs).fill('').map((_, idx) => `c${idx + 1}: Complex`).join(', ');
   index += `exports.${name} = complex.${name};\n`
   typings += `
 /**
  * ${doc}
- *
- * @param c1 - The first complex number.
- * @param c2 - The second complex number.
- * @returns The result.
  */
-export function ${name}(c1: Complex, c2: Complex): Complex;
+export function ${name}(${argStr}): Complex;
 `;
 }
 

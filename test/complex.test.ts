@@ -1,4 +1,4 @@
-import { add, subtract, multiply, divide } from '../';
+import { add, subtract, multiply, divide, absolute } from '../';
 
 describe('complex', () => {
   it('adds two numbers', () => {
@@ -30,5 +30,10 @@ describe('complex', () => {
     expect(divide([5, 5], [5, 5])).toEqual([1, 0]);
     expect(divide([10, 10], [5, 5])).toEqual([2, 0]);
     expect(divide([6, 10], [1, 1])).toEqual([8, 2]);
+  });
+
+  it('returns a number\'s absolute value', () => {
+    expect(absolute([3, 4])).toEqual([5, 0]);
+    expect(absolute([5, 12])).toEqual([13, 0]);
   });
 });
