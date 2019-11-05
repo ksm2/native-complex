@@ -5,20 +5,21 @@
 #include "./inc/arithmetics.c"
 
 
-#define EXPORT(exp, fn) \
+#define EXPORT(fn) \
   napi_value cb_ ## fn(napi_env env, napi_callback_info info) { \
     return cplx_argv2(env, info, fn); \
   } \
-  status = cplx_bind_func(env, exports, exp, cb_ ## fn ); \
-  if (status != napi_ok) napi_throw_error(env, NULL, "Unable to bind " #exp " function");
+  status = cplx_bind_func(env, exports, #fn, cb_ ## fn ); \
+  if (status != napi_ok) napi_throw_error(env, NULL, "Unable to bind " #fn " function");
 
 
 napi_value cplx_init(napi_env env, napi_value exports) {
   napi_status status;
 
-  EXPORT("add", add)
-  EXPORT("subtract", subtract)
-  EXPORT("multiply", multiply)
+  EXPORT(add)
+  EXPORT(subtract)
+  EXPORT(multiply)
+  EXPORT(divide)
 
   return exports;
 }
