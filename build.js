@@ -10,13 +10,9 @@ const re = /\/\/ (?<doc>.*)\nvoid (?<name>\w+)\((?<args>.*)\)/g;
 let match;
 while ((match = re.exec(arithmetics)) !== null) {
   const { name, doc, args } = match.groups;
-  const numArgs = args.split(', ').length / 2 - 1;
-  const argStr = new Array(numArgs).fill('').map((_, idx) => `c${idx + 1}: Complex`).join(', ');
-  if (numArgs === 2) {
-    index += `exports.${name} = ([a, b], [c, d]) => complex.${name}(a, b, c, d);\n`;
-  } else {
-    index += `exports.${name} = ([a, b]) => complex.${name}(a, b);\n`;
-  }
+  const numArgs = args.split(', ').length - 2;
+  const argStr = new Array(numArgs).fill('').map((_, idx) => `${String.fromCharCode(idx + 97)}: number`).join(', ');
+  index += `exports.${name} = complex.${name};\n`;
   typings += `
 /**
  * ${doc}

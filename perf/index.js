@@ -71,15 +71,19 @@ async function main() {
   const buffer = fs.readFileSync(__dirname + '/../arithmetics.wasm');
   const module = await WebAssembly.compile(buffer);
   const instance = new WebAssembly.Instance(module);
+  const memory = new Int32Array(instance.exports.memory);
 
-  const numberOfRuns = 1000000;
+  const numberOfRuns = 100000;
   let i;
 
   const wasmResults = new TestResult('wasm');
   for (i = 0; i < numberOfRuns; i += 1) {
     const start = process.hrtime.bigint();
     instance.exports.add(1, 2, 3, 4, 0, 4);
+    const a = memory[0];
+    const b = memory[1];
     const end = process.hrtime.bigint();
+    process.stderr.write(`${a} ${b}i\n`);
     wasmResults.add(start, end);
   }
   console.log(wasmResults.toString());
@@ -87,8 +91,9 @@ async function main() {
   const basicResults = new TestResult('complex');
   for (i = 0; i < numberOfRuns; i += 1) {
     const start = process.hrtime.bigint();
-    new basic(6, 10).divide(new basic(1, 1));
+    const cplx = new basic(6, 10).divide(new basic(1, 1));
     const end = process.hrtime.bigint();
+    process.stderr.write(String(cplx) + '\n');
     basicResults.add(start, end);
   }
   console.log(basicResults.toString());
@@ -96,8 +101,9 @@ async function main() {
   const fastResults = new TestResult('fast-complex');
   for (i = 0; i < numberOfRuns; i += 1) {
     const start = process.hrtime.bigint();
-    fast.div([6, 10], [1, 1]);
+    const cplx = fast.div([6, 10], [1, 1]);
     const end = process.hrtime.bigint();
+    process.stderr.write(String(cplx) + '\n');
     fastResults.add(start, end);
   }
   console.log(fastResults.toString());
@@ -105,8 +111,9 @@ async function main() {
   const nativeResults = new TestResult('native-complex');
   for (i = 0; i < numberOfRuns; i += 1) {
     const start = process.hrtime.bigint();
-    native.divide([6, 10], [1, 1]);
+    const cplx = native.divide(6, 10, 1, 1);
     const end = process.hrtime.bigint();
+    process.stderr.write(String(cplx) + '\n');
     nativeResults.add(start, end);
   }
   console.log(nativeResults.toString());
