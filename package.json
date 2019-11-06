@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "build": "node-gyp rebuild && node build.js"
+    "build": "node-gyp rebuild && node build.js && yarn wasm",
+    "wasm": "emcc src/inc/arithmetics.c -s WASM=1 -s EXPORTED_FUNCTIONS=\"['_add']\" -Os -o arithmetics.wasm"
   },
   "devDependencies": {
     "@types/jest": "^24.0.21",

@@ -1,3 +1,5 @@
+#include <math.h>
+
 // Adds two complex numbers
 void add(int r1, int i1, int r2, int i2, int* real, int* imaginary) {
   *real = r1 + r2;

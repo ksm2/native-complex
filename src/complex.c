@@ -1,6 +1,5 @@
 #define NAPI_VERSION 5
 #include <node_api.h>
-#include <math.h>
 #include "./inc/structs.c"
 #include "./inc/funcs.c"
 #include "./inc/arithmetics.c"

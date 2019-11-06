@@ -1,6 +1,7 @@
-const native = require('../');
+const fs = require('fs');
 const fast = require('fast-complex');
 const basic = require('complex');
+const native = require('../');
 
 class TestResult {
   constructor(name) {
@@ -64,32 +65,51 @@ Std: ${this.stdDeviation()} ns
   }
 }
 
-const numberOfRuns = 100000;
-let i;
 
-const basicResults = new TestResult('complex');
-for (i = 0; i < numberOfRuns; i += 1) {
-  const start = process.hrtime.bigint();
-  new basic(6, 10).divide(new basic(1, 1));
-  const end = process.hrtime.bigint();
-  basicResults.add(start, end);
-}
-console.log(basicResults.toString());
 
-const fastResults = new TestResult('fast-complex');
-for (i = 0; i < numberOfRuns; i += 1) {
-  const start = process.hrtime.bigint();
-  fast.div([6, 10], [1, 1]);
-  const end = process.hrtime.bigint();
-  fastResults.add(start, end);
-}
-console.log(fastResults.toString());
+async function main() {
+  const buffer = fs.readFileSync(__dirname + '/../arithmetics.wasm');
+  const module = await WebAssembly.compile(buffer);
+  const instance = new WebAssembly.Instance(module);
 
-const nativeResults = new TestResult('native-complex');
-for (i = 0; i < numberOfRuns; i += 1) {
-  const start = process.hrtime.bigint();
-  native.divide([6, 10], [1, 1]);
-  const end = process.hrtime.bigint();
-  nativeResults.add(start, end);
+  const numberOfRuns = 1000000;
+  let i;
+
+  const wasmResults = new TestResult('wasm');
+  for (i = 0; i < numberOfRuns; i += 1) {
+    const start = process.hrtime.bigint();
+    instance.exports.add(1, 2, 3, 4, 0, 4);
+    const end = process.hrtime.bigint();
+    wasmResults.add(start, end);
+  }
+  console.log(wasmResults.toString());
+
+  const basicResults = new TestResult('complex');
+  for (i = 0; i < numberOfRuns; i += 1) {
+    const start = process.hrtime.bigint();
+    new basic(6, 10).divide(new basic(1, 1));
+    const end = process.hrtime.bigint();
+    basicResults.add(start, end);
+  }
+  console.log(basicResults.toString());
+
+  const fastResults = new TestResult('fast-complex');
+  for (i = 0; i < numberOfRuns; i += 1) {
+    const start = process.hrtime.bigint();
+    fast.div([6, 10], [1, 1]);
+    const end = process.hrtime.bigint();
+    fastResults.add(start, end);
+  }
+  console.log(fastResults.toString());
+
+  const nativeResults = new TestResult('native-complex');
+  for (i = 0; i < numberOfRuns; i += 1) {
+    const start = process.hrtime.bigint();
+    native.divide([6, 10], [1, 1]);
+    const end = process.hrtime.bigint();
+    nativeResults.add(start, end);
+  }
+  console.log(nativeResults.toString());
 }
-console.log(nativeResults.toString());
+
+main().catch(console.error)
