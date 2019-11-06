@@ -1,3 +1,7 @@
+#define GET_INT32(from, target) \
+  status = napi_get_value_int32(env, from, target); \
+  if (status != napi_ok) return status;
+
 napi_status cplx_bind_func(napi_env env, napi_value exports, const char* name, napi_callback cb) {
   napi_status status;
   napi_value fn;
@@ -14,13 +18,13 @@ napi_status cplx_bind_func(napi_env env, napi_value exports, const char* name, n
 napi_status cplx_destruct_argv1(napi_env env, napi_callback_info info, int* r1, int* i1) {
   napi_status status;
 
-  size_t argc = 1;
+  size_t argc = 2;
   napi_value argv[argc];
   status = napi_get_cb_info(env, info, &argc, argv, NULL, NULL);
   if (status != napi_ok) napi_throw_error(env, NULL, "Unable to get callback info");
 
-  status = cplx_destruct(env, argv[0], r1, i1);
-  if (status != napi_ok) napi_throw_error(env, NULL, "Unable to destruct the complex number");
+  GET_INT32(argv[0], r1);
+  GET_INT32(argv[1], i1);
 
   return napi_ok;
 }
@@ -46,15 +50,15 @@ napi_value cplx_argv1(napi_env env, napi_callback_info info, void (*calculate)(i
 napi_status cplx_destruct_argv2(napi_env env, napi_callback_info info, int* r1, int* i1, int* r2, int* i2) {
   napi_status status;
 
-  size_t argc = 2;
+  size_t argc = 4;
   napi_value argv[argc];
   status = napi_get_cb_info(env, info, &argc, argv, NULL, NULL);
   if (status != napi_ok) napi_throw_error(env, NULL, "Unable to get callback info");
 
-  status = cplx_destruct(env, argv[0], r1, i1);
-  if (status != napi_ok) napi_throw_error(env, NULL, "Unable to destruct the first complex number");
-  status = cplx_destruct(env, argv[1], r2, i2);
-  if (status != napi_ok) napi_throw_error(env, NULL, "Unable to destruct the second complex number");
+  GET_INT32(argv[0], r1);
+  GET_INT32(argv[1], i1);
+  GET_INT32(argv[2], r2);
+  GET_INT32(argv[3], i2);
 
   return napi_ok;
 }

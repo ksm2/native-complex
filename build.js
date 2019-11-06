@@ -12,7 +12,11 @@ while ((match = re.exec(arithmetics)) !== null) {
   const { name, doc, args } = match.groups;
   const numArgs = args.split(', ').length / 2 - 1;
   const argStr = new Array(numArgs).fill('').map((_, idx) => `c${idx + 1}: Complex`).join(', ');
-  index += `exports.${name} = complex.${name};\n`
+  if (numArgs === 2) {
+    index += `exports.${name} = ([a, b], [c, d]) => complex.${name}(a, b, c, d);\n`;
+  } else {
+    index += `exports.${name} = ([a, b]) => complex.${name}(a, b);\n`;
+  }
   typings += `
 /**
  * ${doc}
