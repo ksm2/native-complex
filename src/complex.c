@@ -5,31 +5,37 @@
 #include "./inc/arithmetics.c"
 
 #define BIND(fn) \
-  status = cplx_bind_func(env, exports, #fn, cb_ ## fn ); \
+  status = cplx_bind_func(env, exports, #fn, cb_ ##fn); \
   if (status != napi_ok) napi_throw_error(env, NULL, "Unable to bind " #fn " function");
 
 #define EXPORT1(fn) \
-  napi_value cb_ ## fn(napi_env env, napi_callback_info info) { \
+  napi_value cb_ ##fn(napi_env env, napi_callback_info info) { \
     return cplx_argv1(env, info, fn); \
-  } \
-  BIND(fn)
+  }
 
 #define EXPORT2(fn) \
-  napi_value cb_ ## fn(napi_env env, napi_callback_info info) { \
+  napi_value cb_ ##fn(napi_env env, napi_callback_info info) { \
     return cplx_argv2(env, info, fn); \
-  } \
-  BIND(fn)
+  }
 
+EXPORT2(add)
+EXPORT2(subtract)
+EXPORT2(multiply)
+EXPORT2(divide)
+EXPORT1(absolute)
+EXPORT1(conjugate)
 
 napi_value cplx_init(napi_env env, napi_value exports) {
   napi_status status;
 
-  EXPORT2(add)
-  EXPORT2(subtract)
-  EXPORT2(multiply)
-  EXPORT2(divide)
-  EXPORT1(absolute)
-  EXPORT1(conjugate)
+  
+  BIND(add)
+  BIND(subtract)
+  BIND(multiply)
+  BIND(divide)
+
+  BIND(absolute)
+  BIND(conjugate)
 
   return exports;
 }
